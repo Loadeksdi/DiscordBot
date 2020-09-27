@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 var Twit = require('twit');
+const daytime_ms = 86400000;
+const channel_id = '694098633338912802';
 
 var T = new Twit({
   consumer_key: 'Tw9BvnCtnBW4QFyBzAvv8wVeL',
@@ -11,34 +13,26 @@ var T = new Twit({
   strictSSL: true,     // optional - requires SSL certificates to be valid.
 })
 
+function filter(reaction, user) {
+  return reaction.message.channel.id === channel_id && reaction.emoji.name === '👀'
+}
 
 const stream = T.stream('statuses/filter', { follow: '1283703286953127936' });
 let channel;
 
 stream.on('tweet', async function (tweet) {
-  const message = await channel.send("heho");
+  const message = await channel.send("New activity on Twitter detected 😳👀");
   await message.react('👀');
+  const reactionCollector = message.createReactionCollector(filter, { time: daytime_ms });
+  reactionCollector.on('collect', async (reaction, user) => {
+    await user.send(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`);
+  });
 });
-
-client.on('messageReactionAdd', async (reaction, user) => {
-  // When we receive a reaction we check if the reaction is partial or not
-  if (reaction.partial) {
-    // If the message this reaction belongs to was removed the fetching might result in an API error, which we need to handle
-    try {
-      await reaction.fetch();
-    } catch (error) {
-      console.error('Something went wrong when fetching the message: ', error);
-      // Return as `reaction.message.author` may be undefined/null
-      return;
-    }
-  }
-}
-);
 
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
-  channel = client.channels.cache.get('759568437764423704');
+  channel = client.channels.cache.get(channel_id);
 });
 
 
