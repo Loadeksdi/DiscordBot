@@ -5,10 +5,10 @@ const daytime_ms = 86400000;
 const channel_id = '694098633338912802';
 
 var T = new Twit({
-  consumer_key: 'Tw9BvnCtnBW4QFyBzAvv8wVeL',
-  consumer_secret: 'BrdSHgEVbpc218ekKN9G4N9EyRRxmrmI4aqqCH5IwVSjoPba4X',
-  access_token: '1034404167543123969-ld8wfCJSd44qxiRRSRZ1ziIdHsP52j',
-  access_token_secret: 'LmiT0wrvczas28DTIZsgYDc4djzQ54t9YRaW8nbi9lodj',
+  consumer_key: '5iqsxsIPFis2svUugIFHskxDG',
+  consumer_secret: 'vV5XAJTwKRkQA2cSFDfSYUDfYwT9e4wV1yxBCMRvDmbgP8OhVC',
+  access_token: '1034404167543123969-DKkkZ6e6L6e1W7zXHMlRNaUr7vIJRF',
+  access_token_secret: 'erD04TLBjAeIoCRHTT7L2iOXeBDhkSK1KnZvQxNJ74Y4l',
   timeout_ms: 60 * 1000,  // optional HTTP request timeout to apply to all requests.
   strictSSL: true,     // optional - requires SSL certificates to be valid.
 })
