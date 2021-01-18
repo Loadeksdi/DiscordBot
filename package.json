@@ -1,5 +1,5 @@
 {
-  "name": "nico",
+  "name": "nico-hentai",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,10 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Loadeksdi & Arno500",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^12.3.1",
-    "twit": "^2.2.11"
+    "discord.js": "^12.5.1",
+    "node-fetch": "^2.6.1",
+    "slashdiscord": "^1.0.0"
   }
 }

@@ -1,39 +1,50 @@
 const Discord = require('discord.js');
-const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
-var Twit = require('twit');
-const daytime_ms = 86400000;
-const channel_id = '694098633338912802';
+const slashDiscord = require('slashdiscord');
+const TwitterEvents = require('./twitter');
+const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION', 'GUILD_MEMBER'] });
+const slash = new slashDiscord(client);
+const channel_id = process.env.DISCORD_CHANNEL;
+const interval = 24 * 60 * 60 * 1000;
+let channel;
+let dailyRTs = [];
 
-var T = new Twit({
-  consumer_key: '5iqsxsIPFis2svUugIFHskxDG',
-  consumer_secret: 'vV5XAJTwKRkQA2cSFDfSYUDfYwT9e4wV1yxBCMRvDmbgP8OhVC',
-  access_token: '1034404167543123969-DKkkZ6e6L6e1W7zXHMlRNaUr7vIJRF',
-  access_token_secret: 'erD04TLBjAeIoCRHTT7L2iOXeBDhkSK1KnZvQxNJ74Y4l',
-  timeout_ms: 60 * 1000,  // optional HTTP request timeout to apply to all requests.
-  strictSSL: true,     // optional - requires SSL certificates to be valid.
-})
-
-function filter(reaction, user) {
-  return reaction.message.channel.id === channel_id && reaction.emoji.name === '👀'
+function filter(reaction) {
+  return reaction.emoji.name === '👀'
 }
 
-const stream = T.stream('statuses/filter', { follow: '1283703286953127936' });
-let channel;
-
-stream.on('tweet', async function (tweet) {
-  const message = await channel.send("New activity on Twitter detected 😳👀");
+async function createNotification(data, ...msgs) {
+  dailyRTs.push({ data, msgs });
+  const message = await channel.send('New activity on Twitter detected 😳👀');
   await message.react('👀');
-  const reactionCollector = message.createReactionCollector(filter, { time: daytime_ms });
+  const reactionCollector = message.createReactionCollector(filter, {});
   reactionCollector.on('collect', async (reaction, user) => {
-    await user.send(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`);
+    if (reaction.partial) {
+      await reaction.fetch();
+    }
+    if (user.partial) {
+      await user.fetch();
+    }
+    msgs.forEach(msg => {
+      user.send(msg);
+    });
+  });
+}
+
+client.on('raw', async packet => {
+  if (packet.t !== 'INTERACTION_CREATE') return;
+  const user = await client.users.fetch(packet.d['member']['user']['id']);
+  const today = new Date()
+  user.send(`Here comes your daily dose of horny material 🥵 (${today.toLocaleString("fr-FR")})`);
+  dailyRTs.filter(data => today - Date.parse(data.data.data.created_at) < interval).forEach(item => {
+    item.msgs.forEach(msg => user.send(msg));
   });
 });
 
-
-client.on('ready', () => {
+client.on('ready', async () => {
   console.log(`Logged in as ${client.user.tag}!`);
-  channel = client.channels.cache.get(channel_id);
+  channel = await client.channels.fetch(channel_id);
+  slash.quickCreateCommand('horny', 'Wraps daily spicy retweets and sends it via DM').then(res => console.log(res));
+  new TwitterEvents().on('tweet', createNotification);
 });
 
-
-client.login('NzU5NTY3NjE3NTI1ODA5MTY1.X2_YeA.7MkKInLohrvwwr5snnv6e61I-LA');
+client.login(process.env.DISCORD_TOKEN);
