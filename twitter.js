@@ -28,13 +28,14 @@ class TwitterEvents extends EventEmitter {
       timeout: 0
     };
     fetch(url, initGet).then(response => {
-      console.log("Succesfully connected")
-      response.body.on('data', (data) => this.readData(data))
-      response.body.on('error', () => setTimeout(() => this.connectionOpened(), 30 * 1000))
-      this.connectionOpened = true
+      console.log("Succesfully connected");
+      response.body.on('data', (data) => this.readData(data));
+      response.body.on('error', () => setTimeout(() => this.connectionOpened(), 30 * 1000));
+      this.connectionOpened = true;
+      response.body.on('end', () => this.startStream());
     }).catch(err => {
-      console.error(err)
-      setTimeout(() => this.startStream(), 30 * 1000)
+      console.error(err);
+      setTimeout(() => this.startStream(), 30 * 1000);
     });
   }
   readData(chunk) {
