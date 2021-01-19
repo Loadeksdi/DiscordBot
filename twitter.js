@@ -27,22 +27,20 @@ class TwitterEvents extends EventEmitter {
       cache: 'default',
       timeout: 0
     };
+    const restart = () => {
+      this.connectionOpened = false;
+      this.startStream();
+    };
     fetch(url, initGet).then(response => {
       console.log("Succesfully connected");
-      response.body.on('data', (data) => this.readData(data));
-      response.body.on('error', () => setTimeout(() => this.connectionOpened(), 30 * 1000));
       this.connectionOpened = true;
-      response.body.on('end', () => {
-        this.connectionOpened = false;
-        this.startStream();
-      });
-      response.body.on('close', () => {
-        this.connectionOpened = false;
-        this.startStream();
-      });
+      response.body.on('data', (data) => this.readData(data));
+      response.body.on('error', () => setTimeout(restart, 30 * 1000));
+      response.body.on('end', restart);
+      response.body.on('close', restart);
     }).catch(err => {
       console.error(err);
-      setTimeout(() => this.startStream(), 30 * 1000);
+      setTimeout(restart, 30 * 1000);
     });
   }
   readData(chunk) {
