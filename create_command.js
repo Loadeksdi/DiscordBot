@@ -3,6 +3,9 @@ const { REST } = require('@discordjs/rest')
 const { Routes } = require('discord-api-types/v9')
 const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN)
 
+const clientId = process.env.DISCORD_CLIENT_ID
+const guildId = process.env.DISCORD_GUILD_ID
+
 const commands = [
 	new SlashCommandBuilder()
 		.setName('horny')
@@ -18,6 +21,16 @@ const commands = [
 		)
 ].map(command => command.toJSON())
 
-rest.put(Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, process.env.DISCORD_GUILD_ID), { body: commands })
+rest.get(Routes.applicationGuildCommands(clientId, guildId))
+	.then(data => {
+		const promises = []
+		for (const command of data) {
+			const deleteUrl = `${Routes.applicationGuildCommands(clientId, guildId)}/${command.id}`
+			promises.push(rest.delete(deleteUrl))
+		}
+		return Promise.all(promises)
+	}).catch(console.error)
+
+rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
 	.then(() => console.log('Successfully registered application commands.'))
 	.catch(console.error)
