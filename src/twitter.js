@@ -5,7 +5,7 @@ let accessToken
 let refreshToken
 
 const loadConfig = async () => {
-	const fileBuffer = await fs.readFile('conf/config.json', 'utf-8')
+	const fileBuffer = await fs.readFile('../conf/config.json', 'utf-8')
 	refreshToken = JSON.parse(fileBuffer.toString()).token
 }
 
@@ -109,7 +109,7 @@ const wrapLikes = async (period, fetchedResponse) => {
 }
 
 const saveConfig = async (refreshToken) => {
-	await fs.writeFile('conf/config.json', JSON.stringify({ token: refreshToken }))
+	await fs.writeFile('../conf/config.json', JSON.stringify({ token: refreshToken }))
 	console.log("Token saved.")
 }
 
