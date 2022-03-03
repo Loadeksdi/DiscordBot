@@ -7,20 +7,20 @@ const clientId = process.env.DISCORD_CLIENT_ID
 const guildId = process.env.DISCORD_GUILD_ID
 
 const commands = [
-	new SlashCommandBuilder()
-		.setName('horny')
-		.setDescription('Wraps daily spicy liked tweets and sends them via DM')
-		.addStringOption(option =>
-			option.setName('period')
-				.setDescription('How far are you ready to dig into degeneracy?')
-				.setRequired(true)
-				.addChoice('Since today 😩', 'today')
-				.addChoice('Since yesterday 😳', 'yesterday')
-				.addChoice('Since last week 🥵', 'week')
-				.addChoice('Since last month ☠️', 'month')
-		)
+  new SlashCommandBuilder()
+    .setName('horny')
+    .setDescription('Wraps daily spicy liked tweets and sends them via DM')
+    .addStringOption(option =>
+      option.setName('period')
+        .setDescription('How far are you ready to dig into degeneracy?')
+        .setRequired(true)
+        .addChoice('Since today 😩', 'today')
+        .addChoice('Since yesterday 😳', 'yesterday')
+        .addChoice('Since last week 🥵', 'week')
+        .addChoice('Since last month ☠️', 'month')
+    )
 ].map(command => command.toJSON())
 
 rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
-	.then(() => console.log('Successfully registered application commands.'))
-	.catch(console.error)
+  .then(() => console.log('Successfully registered application commands.'))
+  .catch(console.error)

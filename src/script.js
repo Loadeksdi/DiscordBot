@@ -43,7 +43,7 @@ client.on('interactionCreate', async (interaction) => {
 client.on('ready', async () => {
   await Twitter.loadConfig()
   console.log(`Logged in as ${client.user.tag}!`)
-  client.user.setActivity('with your desires 💜', { type: 'PLAYING' });
+  client.user.setActivity('with your desires 💜', { type: 'PLAYING' })
   await Twitter.refreshAccessToken()
 })
 

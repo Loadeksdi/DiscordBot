@@ -1,6 +1,6 @@
 FROM node:17-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /usr/app
 
 COPY package*.json ./
 
@@ -8,4 +8,4 @@ RUN npm ci --only=production
 
 COPY . .
 
-CMD ["node","script.js"]
+CMD ["node","src/script.js"]
