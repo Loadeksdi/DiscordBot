@@ -2,10 +2,13 @@ FROM node:17-alpine
 
 WORKDIR /usr/app
 
-COPY package*.json ./
+RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
 
-RUN npm ci --only=production
+COPY pnpm-lock.yaml ./
 
-COPY . .
+RUN pnpm fetch --prod
+
+ADD . ./
+RUN pnpm install -r --offline --prod
 
 CMD ["node","src/script.js"]
