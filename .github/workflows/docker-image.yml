@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   workflow_run:
-    workflows: [Lint Code Base]
+    workflows: [CodeQL]
     types:
       - completed  
 env:
