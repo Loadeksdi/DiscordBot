@@ -9,14 +9,18 @@ const groupByN = (data, n) => {
   }
   return result
 }
-
+// TODO: Cache tweet requests, pnpm, CD :D
 const hornyResponse = async (interaction) => {
-  await interaction.reply({ content: 'Looking for content, please wait ...'})
+  await interaction.reply({ content: 'Looking for content, please wait ...' })
   interaction.channel.sendTyping()
+  const user = interaction.user
   try {
     const tweetsToSend = await Twitter.wrapLikes(interaction.options.getString('period'))
-    const user = interaction.user
-    user.send(`Here comes your dose of ~~copium~~ horny material 🥵`)
+    if (tweetsToSend.length !== 0) {
+      user.send('Here comes your dose of ~~copium~~ horny material 🥵')
+    } else {
+      user.send('Unfortunately, the horny material does not meet the quality requirements of the moment 😔')
+    }
     groupByN(tweetsToSend, 5).forEach(msg => {
       user.send(msg.map(media => media.url).join('\n'))
     })
