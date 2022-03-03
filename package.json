@@ -2,7 +2,7 @@
   "name": "hword-bot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/script.js",
   "keywords": [],
   "author": "Loadeksdi & Arno500",
   "license": "ISC",
