@@ -1,19 +1,10 @@
 name: Docker Image CI
 
-on:   
-  push:
-    # Publish `master` as Docker `latest` image.
-    branches:
-      - master
-      - seed
-
-    # Publish `v1.2.3` tags as releases.
-    tags:
-      - v*
-
-  # Run tests for any PRs.
-  pull_request:
-  
+on:
+  workflow_run:
+    workflows: [Lint Code Base]
+    types:
+      - completed  
 env:
   IMAGE_NAME: hwordbot
   
