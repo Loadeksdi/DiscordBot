@@ -28,3 +28,4 @@ jobs:
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           FILTER_REGEX_INCLUDE: ".*src/.*"
+          VALIDATE_JAVASCRIPT_STANDARD: true
