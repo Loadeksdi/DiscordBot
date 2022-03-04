@@ -9,7 +9,7 @@ const groupByN = (data, n) => {
   }
   return result
 }
-// TODO: Cache tweet requests, deployment
+// TODO: Cache tweet requests
 const hornyResponse = async (interaction) => {
   await interaction.reply({ content: 'Looking for content, please wait ...' })
   interaction.channel.sendTyping()

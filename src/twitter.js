@@ -75,6 +75,7 @@ const wrapLikes = async (period, fetchedResponse) => {
   try {
     res = await axios.get(url.toString(), { headers })
   } catch (error) {
+    console.error(error)
     if (error.response.status === 403) {
       await refreshAccessToken()
       return await wrapLikes()
