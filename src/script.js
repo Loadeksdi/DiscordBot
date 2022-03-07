@@ -49,7 +49,6 @@ client.on('interactionCreate', async (interaction) => {
     interaction.reply({ content: 'Adding a role', ephemeral: true })
     const role = await interaction.guild.roles.fetch(roles[interaction.customId])
     await interaction.member.roles.add(role)
-    interaction.deleteReply()
   }
 })
 
