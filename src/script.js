@@ -61,7 +61,7 @@ const sendRolesMessage = async () => {
         .setLabel('cat lovers 🐈')
         .setStyle('PRIMARY'),
       new MessageButton()
-        .setCustomId('cat')
+        .setCustomId('frog')
         .setLabel('frog enjoyers 🐸')
         .setStyle('SUCCESS'),
       new MessageButton()
