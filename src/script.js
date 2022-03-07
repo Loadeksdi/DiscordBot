@@ -1,6 +1,13 @@
-const Discord = require('discord.js')
-const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES] })
+const { Client, Intents, MessageActionRow, MessageButton, MessageEmbed } = require('discord.js')
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] })
 const Twitter = require('./twitter')
+
+const roles = {
+  cat: process.env.DISCORD_ROLES_CAT,
+  dev: process.env.DISCORD_ROLES_DEV,
+  frog: process.env.DISCORD_ROLES_FROG,
+  horny: process.env.DISCORD_ROLES_HORNY
+}
 
 const groupByN = (data, n) => {
   const result = []
@@ -36,14 +43,50 @@ const commands = {
 }
 
 client.on('interactionCreate', async (interaction) => {
-  if (!interaction.isCommand()) return
-  commands[interaction.commandName](interaction)
+  if (interaction.isCommand()) {
+    commands[interaction.commandName](interaction)
+  } else if (interaction.isButton()) {
+    interaction.reply({ content: 'Adding a role', ephemeral: true })
+    const role = await interaction.guild.roles.fetch(roles[interaction.customId])
+    await interaction.member.roles.add(role)
+    interaction.deleteReply()
+  }
 })
+
+const sendRolesMessage = async () => {
+  const row = new MessageActionRow()
+    .addComponents(
+      new MessageButton()
+        .setCustomId('cat')
+        .setLabel('cat lovers 🐈')
+        .setStyle('PRIMARY'),
+      new MessageButton()
+        .setCustomId('cat')
+        .setLabel('frog enjoyers 🐸')
+        .setStyle('SUCCESS'),
+      new MessageButton()
+        .setCustomId('dev')
+        .setLabel('dev 💻')
+        .setStyle('PRIMARY'),
+      new MessageButton()
+        .setCustomId('horny')
+        .setLabel('horny pass 🥵')
+        .setStyle('DANGER')
+    )
+  const embed = new MessageEmbed()
+    .setColor('#aae5a3')
+    .setTitle('Roles selection 🎭')
+    .setDescription('Get your roles by clicking on the buttons below!')
+    .setTimestamp(new Date())
+  const channel = await client.channels.fetch(process.env.DISCORD_CHANNEL_ID)
+  await channel.send({ embeds: [embed], components: [row] })
+}
 
 client.on('ready', async () => {
   await Twitter.loadConfig()
   console.log(`Logged in as ${client.user.tag}!`)
   client.user.setActivity('with your desires 💜', { type: 'PLAYING' })
+  sendRolesMessage()
   await Twitter.refreshAccessToken()
 })
 
