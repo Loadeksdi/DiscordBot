@@ -1,4 +1,4 @@
-const { Client, Intents, MessageActionRow, MessageButton, MessageEmbed } = require('discord.js')
+const { Client, Intents/** , MessageActionRow, MessageButton, MessageEmbed */ } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] })
 const Twitter = require('./twitter')
 
@@ -52,6 +52,7 @@ client.on('interactionCreate', async (interaction) => {
   }
 })
 
+/**
 const sendRolesMessage = async () => {
   const row = new MessageActionRow()
     .addComponents(
@@ -80,12 +81,13 @@ const sendRolesMessage = async () => {
   const channel = await client.channels.fetch(process.env.DISCORD_CHANNEL_ID)
   await channel.send({ embeds: [embed], components: [row] })
 }
+*/
 
 client.on('ready', async () => {
   await Twitter.loadConfig()
   console.log(`Logged in as ${client.user.tag}!`)
   client.user.setActivity('with your desires 💜', { type: 'PLAYING' })
-  //sendRolesMessage()
+  // sendRolesMessage()
   await Twitter.refreshAccessToken()
 })
 
