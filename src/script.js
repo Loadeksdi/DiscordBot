@@ -85,7 +85,7 @@ client.on('ready', async () => {
   await Twitter.loadConfig()
   console.log(`Logged in as ${client.user.tag}!`)
   client.user.setActivity('with your desires 💜', { type: 'PLAYING' })
-  sendRolesMessage()
+  //sendRolesMessage()
   await Twitter.refreshAccessToken()
 })
 
