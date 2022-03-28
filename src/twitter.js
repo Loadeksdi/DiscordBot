@@ -76,11 +76,12 @@ const wrapLikes = async (period, fetchedResponse) => {
     res = await axios.get(url.toString(), { headers })
   } catch (error) {
     console.error(error)
-    if (error.response.status === 403) {
-      await refreshAccessToken()
-      return await wrapLikes()
-    } else if (error.response.status === 429) {
+    if (error.response.status === 429) {
       await later(parseInt(error.response.headers['x-rate-limit-reset']) * 1000 - Date.now())
+      return await wrapLikes()
+    }
+    else if (error.response.status > 400) {
+      await refreshAccessToken()
       return await wrapLikes()
     } else {
       throw new Error(error.response.statusText)
