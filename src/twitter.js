@@ -79,8 +79,7 @@ const wrapLikes = async (period, fetchedResponse) => {
     if (error.response.status === 429) {
       await later(parseInt(error.response.headers['x-rate-limit-reset']) * 1000 - Date.now())
       return await wrapLikes()
-    }
-    else if (error.response.status > 400) {
+    } else if (error.response.status > 400) {
       await refreshAccessToken()
       return await wrapLikes()
     } else {
